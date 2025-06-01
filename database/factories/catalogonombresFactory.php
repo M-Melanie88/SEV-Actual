@@ -22,7 +22,7 @@ class catalogonombresFactory extends Factory
             'apellido_materno'=> $this ->faker->word(),
             'apellido_paterno'=> $this ->faker->word(),
   
-            'id_solicitante'=> $this ->faker->randomElement(['1','2']),
+            // 'id_solicitante'=> $this ->faker->randomElement(['1','2']),
 
         ];
     }

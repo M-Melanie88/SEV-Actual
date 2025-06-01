@@ -13,13 +13,13 @@ class catalogonombres extends Model
         'nombre', 
         'apellido_paterno', 
         'apellido_materno',
-        'id_solicitante', 
+ 
   
     ];
 
 
-    public function solicitante()
-    {
-        return $this->belongsTo(solicitantes::class, 'id_solicitante');
-    }
+    // public function solicitante()
+    // {
+    //     return $this->belongsTo(solicitantes::class, 'id_solicitante');
+    // }
 }

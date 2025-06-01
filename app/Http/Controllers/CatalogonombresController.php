@@ -13,6 +13,8 @@ class CatalogonombresController extends Controller
     public function index()
     {
         //
+        $catalogonombres= catalogonombres::all();
+        return view('CatalogoNombres', compact('catalogonombres'));
     }
 
     /**
@@ -29,6 +31,23 @@ class CatalogonombresController extends Controller
     public function store(Request $request)
     {
         //
+        $datos=[
+            'nombre' => ['required'],
+            'apellido_paterno' => ['required'],
+            'apellido_materno'=> ['required'],
+        ];
+        
+        $mensaje =[
+            'required'=>':attribute es requerido',
+            'unique'=>':attribute ya existe',
+        ];
+     $validate = $this->validate($request, $datos, $mensaje);
+     catalogonombres::create($validate);
+
+   
+        // equiposprestados::create($validate);
+
+        return redirect ('CatalogoNombres');
     }
 
     /**
@@ -50,16 +69,36 @@ class CatalogonombresController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, catalogonombres $catalogonombres)
+    public function update(Request $request,  $id)
     {
         //
+
+          // Validación
+    $datos = [
+        'nombre' => ['required'],
+        'apellido_paterno' => ['required'],
+        'apellido_materno'=> ['required'],
+    ];
+
+    $mensaje = [
+        'required' => ':attribute es requerido',
+        'unique' => ':attribute ya existe',
+    ];
+
+    $validate = $this->validate($request, $datos, $mensaje);
+    catalogonombres::where('id','=',$id)->update($validate);
+    $equipo = catalogonombres::findOrFail($id);
+
+        return redirect ('CatalogoNombres');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(catalogonombres $catalogonombres)
+    public function destroy( $id)
     {
         //
+        catalogonombres::destroy($id);
+        return redirect('CatalogoNombres');
     }
 }

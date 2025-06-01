@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\catalogologos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CatalogologosController extends Controller
 {
@@ -12,7 +14,8 @@ class CatalogologosController extends Controller
      */
     public function index()
     {
-        //
+        $catalogologos= catalogologos::all();
+        return view('CatalogoLogos', compact('catalogologos'));
     }
 
     /**
@@ -29,6 +32,29 @@ class CatalogologosController extends Controller
     public function store(Request $request)
     {
         //
+        $datos=[
+            'logos' => ['required'],
+    
+        ];
+        
+        $mensaje =[
+            'required'=>':attribute es requerido',
+            'unique'=>':attribute ya existe',
+        ];
+
+
+     $validate = Validator::make($request->all(), $datos, $mensaje);
+
+     $logossev=request()->except('_token');
+     if($request->hasFile('logos')){
+     $logossev['logos']=$request->file('logos')->store('uploads','public');
+    }
+     catalogologos::create($logossev);
+
+   
+        // equiposprestados::create($validate);
+
+        return redirect ('CatalogoLogos');
     }
 
     /**
@@ -50,16 +76,49 @@ class CatalogologosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, catalogologos $catalogologos)
+    public function update(Request $request,  $id)
     {
         //
+
+          // Validación
+          $datos=[
+            'logos' => ['required'],
+    
+        ];
+        
+        $mensaje =[
+            'required'=>':attribute es requerido',
+            'unique'=>':attribute ya existe',
+        ];
+
+
+    $validate = Validator::make($request->all(), $datos, $mensaje);
+if($request->hasFile('logos')){
+    $datos=['logos'=>'required|mimes:jpeg,png,jpg'];
+    $mensaje=['logos.required'=>'El logo es requerido'];
+}
+  
+   $this->validate($request, $datos, $mensaje);
+    $logossev=request()->except(['_token','_method']);
+    if($request->hasFile('logos')){
+      $equipo = catalogologos::findOrFail($id);
+      Storage::delete('public/storage'.$equipo->logos);
+        $logossev['logos']=$request->file('logos')->store('uploads','public');
+       }
+
+    catalogologos::where('id','=',$id)->update($logossev);
+    $equipo = catalogologos::findOrFail($id);
+
+        return redirect ('CatalogoLogos');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(catalogologos $catalogologos)
+    public function destroy( $id)
     {
         //
+        catalogologos::destroy($id);
+        return redirect('CatalogoLogos');
     }
 }

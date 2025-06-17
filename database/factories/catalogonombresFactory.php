@@ -21,7 +21,8 @@ class catalogonombresFactory extends Factory
             'nombre'=> $this ->faker->name(),
             'apellido_materno'=> $this ->faker->word(),
             'apellido_paterno'=> $this ->faker->word(),
-  
+            'departamento'=> $this ->faker->word(),
+
             // 'id_solicitante'=> $this ->faker->randomElement(['1','2']),
 
         ];

@@ -18,13 +18,14 @@ class tiposconsumiblesFactory extends Factory
     {
         return [
             //
-            'descripcion'=> $this ->faker->sentence(50),
-            'marca'=> $this ->faker->word(),
-            'modelo'=> $this ->faker->word(),
-            'capacidad'=> $this ->faker->randomElement(['1','2','a','b']),
-            'fecha_vencimiento'=> $this ->faker->dateTimeThisMonth(),
-            'cantidad'=> $this ->faker->randomNumber(5),
 
+            'tipo_consumible'=> $this  ->faker->word(),
+            'descripcion'=> $this ->faker->sentence(50),
+            'SO'=> $this ->faker->word(),
+            'RAM'=> $this ->faker->word(),
+            'aditamentos'=> $this ->faker->word(),
+            'fecha_vencimiento'=> $this ->faker->dateTimeThisMonth(),
+      
         ];
     }
 }

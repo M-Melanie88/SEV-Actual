@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\asignacionbienes;
+use App\Models\catalogofirmantes;
 use App\Models\catalogonombres;
 use App\Models\devoluciones;
 use App\Models\equiposprestados;
@@ -15,7 +16,7 @@ use App\Models\usuarios;
 use App\Models\valesconsumibles;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class DataSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -31,7 +32,7 @@ class DatabaseSeeder extends Seeder
         usuarios::factory(2)->create();
         devoluciones::factory(2)->create();
         tiposequipos::factory(2)->create();
-        solicitantes::factory(2)->create();
+        catalogofirmantes::factory(2)->create();
         catalogonombres::factory(2)->create(); 
         asignacionbienes::factory(2)->create();
         equiposprestados::factory(2)->create();

@@ -13,6 +13,8 @@ class TiposconsumiblesController extends Controller
     public function index()
     {
         //
+        $catalogoconsumibles=tiposconsumibles::all();
+        return view('CatalogoConsumibles', compact('catalogoconsumibles'));
     }
 
     /**
@@ -29,6 +31,27 @@ class TiposconsumiblesController extends Controller
     public function store(Request $request)
     {
         //
+
+            $datos=[
+                'tipo_consumible' => ['required'],
+                'descripcion' => ['required'],
+                'SO'=> ['required'],
+                'RAM'=> ['required'],
+                'aditamentos'=> ['required'],
+                'fecha_vencimiento'=> ['required'],
+            ];
+            
+            $mensaje =[
+                'required'=>':attribute es requerido',
+                'unique'=>':attribute ya existe',
+            ];
+         $validate = $this->validate($request, $datos, $mensaje);
+         tiposconsumibles::create($validate);
+    
+       
+            // equiposprestados::create($validate);
+    
+            return redirect ('CatalogoConsumibles');
     }
 
     /**
@@ -50,16 +73,44 @@ class TiposconsumiblesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, tiposconsumibles $tiposconsumibles)
+    public function update(Request $request,  $id)
     {
         //
+
+        
+        $datos=[
+            'tipo_consumible' => ['required'],
+            'descripcion' => ['required'],
+            'SO'=> ['required'],
+            'RAM'=> ['required'],
+            'aditamentos'=> ['required'],
+            'fecha_vencimiento'=> ['required'],
+        ];
+        
+        $mensaje =[
+            'required'=>':attribute es requerido',
+            'unique'=>':attribute ya existe',
+        ];
+    
+
+
+     $validate = $this->validate($request, $datos, $mensaje);
+     tiposconsumibles::where('id','=',$id)->update($validate);
+     $equipo = tiposconsumibles::findOrFail($id);
+   
+        // equiposprestados::create($validate);
+
+        return redirect ('CatalogoConsumibles');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(tiposconsumibles $tiposconsumibles)
+    public function destroy( $id)
     {
         //
+
+        tiposconsumibles::destroy($id);
+        return redirect('CatalogoConsumibles');
     }
 }

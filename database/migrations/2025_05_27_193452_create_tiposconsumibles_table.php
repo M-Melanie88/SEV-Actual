@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('tiposconsumibles', function (Blueprint $table) {
             $table->id();
+            $table->string('tipo_consumible')->nullable();     // observations → observaciones        
             $table->text('descripcion')->nullable(); // description → descripcion
-            $table->string('marca')->nullable();     // brand → marca
-            $table->string('modelo')->nullable();    // model → modelo
-            $table->string('capacidad')->nullable(); // capacity → capacidad
-            $table->string('cantidad')->nullable(); // capacity → capacidad
+            $table->string('SO')->nullable();     // brand → marca
+            $table->string('RAM')->nullable();    // model → modelo
+            $table->string('aditamentos')->nullable(); 
             $table->timestamp('fecha_vencimiento')->nullable(); // lapsed_closure → cierre_vencimiento
 
             $table->timestamps();

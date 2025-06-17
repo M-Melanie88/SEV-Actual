@@ -25,9 +25,13 @@ return new class extends Migration
             
             $table->timestamps();
             $table->unsignedBigInteger('id_cat_nombre')->nullable(); 
-            $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->nullable();
-            $table->unsignedBigInteger('id_solicitante')->nullable(); 
-            $table->foreign('id_solicitante')->references('id')->on('solicitantes')->nullable();
+            $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->unsignedBigInteger('id_cat_firmantes')->nullable(); 
+            $table->foreign('id_cat_firmantes')->references('id')->on('catalogofirmantes')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->unsignedBigInteger('id_devolucion')->nullable(); 
+            $table->foreign('id_devolucion')->references('id')->on('devoluciones')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->unsignedBigInteger('id_tipo_equipo')->nullable(); 
+            $table->foreign('id_tipo_equipo')->references('id')->on('tiposequipos')->onDelete("cascade")->onUpdate("cascade")->nullable();
 
         });
     }

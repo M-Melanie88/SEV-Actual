@@ -22,6 +22,7 @@ class equiposprestadosFactory extends Factory
             'fecha_prorroga'=> $this ->faker->dateTimeThisMonth(),
             'id_usuario'=> $this ->faker->randomElement(['1','2']),
             'id_cat_nombre'=> $this ->faker->randomElement(['1','2']),
+            'id_cat_firmantes'=> $this ->faker->randomElement(['1','2']),
             'id_tipo_equipo'=> $this ->faker->randomElement(['1','2']),
             'id_devolucion'=> $this ->faker->randomElement(['1','2']),
 

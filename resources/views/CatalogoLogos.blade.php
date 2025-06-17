@@ -210,6 +210,25 @@
             <p>Catálogo de logos</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="CatalogoEquipos" class="nav-link ">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Catálogo de equipos</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="CatalogoFirmantes" class="nav-link ">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Catálogo de firmantes</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="CatalogoConsumibles" class="nav-link ">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Catálogo de consumibles</p>
+          </a>
+        </li>
        
       </ul>
     </li>
@@ -263,7 +282,7 @@
                   <tr>
                       <th>Id Catálogo Logos</th>
                       <th>Logos</th>
-           
+           <th>Acciones</th>
                   </tr>
               </thead>
               @foreach($catalogologos as $catalogologo)

@@ -12,24 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('equiposprestados', function (Blueprint $table) {
-     
             $table->id('id'); 
 
             $table->unsignedBigInteger('id_usuario')->nullable(); 
             $table->date('fecha_prestamo')->nullable(); 
             $table->unsignedBigInteger('id_cat_nombre')->nullable(); 
             $table->unsignedBigInteger('id_tipo_equipo')->nullable(); 
+            $table->unsignedBigInteger('id_cat_firmantes')->nullable(); 
             $table->unsignedBigInteger('id_devolucion')->nullable(); 
             $table->string('status')->nullable(); 
-            $table->date('fecha_prorroga')->nullable()->nullable(); 
+            $table->date('fecha_prorroga')->nullable(); 
             
             $table->timestamps();
             
             
-            $table->foreign('id_usuario')->references('id')->on('usuarios')->nullable(); // users -> usuarios
-            $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->nullable(); // loan_detail -> detalle_prestamo
-            $table->foreign('id_tipo_equipo')->references('id')->on('tiposequipos')->nullable();
-            $table->foreign('id_devolucion')->references('id')->on('devoluciones')->nullable();
+            $table->foreign('id_usuario')->references('id')->on('usuarios')->onDelete("cascade")->onUpdate("cascade")->nullable(); // users -> usuarios
+            $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->foreign('id_cat_firmantes')->references('id')->on('catalogofirmantes')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->foreign('id_tipo_equipo')->references('id')->on('tiposequipos')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->foreign('id_devolucion')->references('id')->on('devoluciones')->onDelete("cascade")->onUpdate("cascade")->nullable();
         });
     }
 

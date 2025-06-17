@@ -197,7 +197,7 @@
 
       <ul class="nav nav-treeview">
         <li class="nav-item">
-          <a href="Dashboard" class="nav-link ">
+          <a href="CatalogoNombres" class="nav-link ">
             {{-- <i class="far fa-circle nav-icon"></i> --}}
             {{-- <i class="nav-icon fas fa-chart-pie"></i> --}}
             <i class="far fa-circle nav-icon"></i>
@@ -205,9 +205,28 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="EquiposPrestados" class="nav-link">
+          <a href="CatalogoLogos" class="nav-link">
             <i class="far fa-circle nav-icon"></i>
             <p>Catálogo de logos</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="CatalogoEquipos" class="nav-link ">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Catálogo de equipos</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="CatalogoFirmantes" class="nav-link ">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Catálogo de firmantes</p>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="CatalogoConsumibles" class="nav-link ">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Catálogo de consumibles</p>
           </a>
         </li>
        
@@ -259,6 +278,33 @@
       <div class="card-body">
 
           <table id="example2" class="table table-bordered table-hover">
+@php
+  $nomMostrados=[];
+
+@endphp
+
+<form action="{{ url('/EquiposPrestados') }}" method="get">
+
+  <select name="id_cat_nombre" id="id_cat_nombre" class='form-control'>
+  @foreach($catalogonombres as $catalogonombre)
+  @if (!in_array($catalogonombre->id, $nomMostrados))
+    <option value="{{ $catalogonombre->id }}">{{ $catalogonombre->nombre}}</option>
+
+
+    @php
+      $nomMostrados[]=$catalogonombre->id;
+    @endphp
+  @endif
+@endforeach
+</select>
+          
+              <a href="{{ url('EquiposPrestados') }}" type="button" class="btn btn-secondary" >Desahacer busqueda</a>
+              <input type="submit" value="Buscar" class="btn btn-primary" > 
+
+
+</form>
+
+
               <thead>
                   <tr>
                       <th>Id prestamo</th>
@@ -279,7 +325,143 @@
                       <td>{{$equipoprestado->fecha_prestamo ?? ' '}}</td>
                       <td>{{$equipoprestado->devolucion->fecha_devolucion ?? ' '}}</td>
                       <td>{{$equipoprestado->status ?? ' '}}</td>
-                      <td></td>
+                      <td>
+               
+                 
+                        <a href="{{ url('') }}"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
+
+                        <form action="{{ url('/EquiposPrestados/'.$equipoprestado->id) }}" method="POST">
+                          @csrf
+                          {{ method_field('DELETE') }}
+                          <button type="submit" class="btn btn-danger">Eliminar</button>
+
+                        </form>
+              
+                        <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $equipoprestado->id }}">Editar</a>
+
+
+                        <form action="{{ url('/EquiposPrestados/'.$equipoprestado->id) }}" method="POST">
+
+                          @csrf
+
+                          {{ method_field('PATCH') }}
+                          <div class="modal fade" id="modal-edit{{ $equipoprestado->id }}"> 
+                            <div class="modal-dialog modal-lg"> 
+                            <div class="modal-content bg-light">
+                              <div class="modal-header">
+                                <h4 class="modal-title ml-auto">Registro de prestamos de equipo</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                         
+                                      <label for="id_tipo_equipo">Equipo</label>
+                                      <select name="id_tipo_equipo" id="id_tipo_equipo" class="form-control"> 
+                                        @foreach($tiposequipos as $tipoequipo)
+                                            <option value="{{ $tipoequipo->id }}" >{{ $tipoequipo->nombre}}</option>
+                                            @endforeach 
+                                
+                                          </select> 
+                                {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
+                                        {{-- @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
+                                        @endforeach --}}
+                                        {{-- <option value="">Computadora HP</option>
+                                        <option value="">Computadora HP</option>
+                                      </select> --}}
+                                
+                                    </div>
+                                  </div>
+              
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+              
+                                      <label for="fecha_prestamo">Fecha prestamo</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="date" id="fecha_prestamo" name="fecha_prestamo" value="{{ old('fecha_prestamo', $equipoprestado->fecha_prestamo) }}" class="form-control"> 
+                           
+                                    </div>
+                                  </div>
+              
+              
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="devolucion">Fecha de devolucion</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="date" id="devolucion" name="devolucion"  value="{{ old('devolucion', $equipoprestado->devolucion->fecha_devolucion ??' ')}}" class="form-control"></input>
+                              
+                                    </div>
+                                  </div>
+              
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label for="id_cat_nombre">Responsable</label>
+                                {{-- <input name="id_cat_nombres" id="id_cat_nombres" type="text" placeholder="Escribe el responsable" value="{{ old('id_cat_nombres')}}"> --}}
+                              {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                     @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_cat_nombre }}">{{ $equipoprestado->catalogonombre->nombre ??''}}</option>
+                                        @endforeach  
+                                      </select>     --}}
+                                      <select name="id_cat_nombre" id="id_cat_nombre" class="form-control"> 
+                                        @foreach($catalogonombres as $catalogonombre)
+                                           <option value="{{ $catalogonombre->id }}">{{ $catalogonombre->nombre ??''}}</option>
+                                           @endforeach  
+                                         </select>    
+                                    </div>
+                                  </div>
+              
+              
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label for="status" >Status</label>
+                                      <br>
+                                {{-- <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}"> --}}
+                             <select name="status" id="status" class="form-control">
+                                  <option value="Devuelto"{{ old('status',$equipoprestado->status=='Devuelto'?'selected':'') }}>Devuelto</option>
+                                  <option value="No devuelto"{{ old('status',$equipoprestado->status=='No devuelto'?'selected':'') }}>No devuelto</option>
+                                  <option value="Pendiente" {{ old('status',$equipoprestado->status=='Pendiente'?'selected':'') }}>Pendiente</option>
+                              </select>
+                                  
+                             
+              
+                                    </div>
+                                  </div>
+              
+              
+                            
+                                           
+                                </div>
+                              </div>
+                                      <div class="modal-footer ">
+                                    
+                                        <button  type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
+                        
+                                        <button class="btn btn-outline-primary toastrDeafultSuccess">EDITAR</button>
+                                    
+                              </div>
+                          
+                            </div>
+                          </div>
+                   
+                        </form>
+                
+
+                  
+
+                      </td>
                   
                   
                   </tr>
@@ -288,6 +470,7 @@
               </tbody>
 
           </table>
+          {{ $equiposprestados->links() }}
       </div>
   </div>
 </div>
@@ -310,17 +493,16 @@
                     <div class="col-md-4">
                       <div class="form-group">
            
-                        <label for="nombre_tipo_equipo">Equipo</label>
+                        <label for="id_tipo_equipo">Equipo</label>
                  
-                  <input type="text" id="nombre_tipo_equipo" name="nombre_tipo_equipo" placeholder="Equipo a prestar" value="{{ old('nombre_tipo_equipo')}}"></input>
+                  {{-- <input type="text" id="nombre_tipo_equipo" name="nombre_tipo_equipo" placeholder="Equipo a prestar" value="{{ old('nombre_tipo_equipo')}}" class="form-control"></input> --}}
                 
-                  {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
-                          {{-- @foreach($equiposprestados as $equipoprestado)
-                          <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
-                          @endforeach --}}
-                          {{-- <option value="">Computadora HP</option>
-                          <option value="">Computadora HP</option>
-                        </select> --}}
+                 <select name="id_tipo_equipo" id="id_tipo_equipo" class="form-control"> 
+                      @foreach($tiposequipos as $tipoequipo)
+                          <option value="{{ $tipoequipo->id }}" >{{ $tipoequipo->nombre}}</option>
+                          @endforeach 
+              
+                        </select> 
                   
                       </div>
                     </div>
@@ -328,12 +510,12 @@
                     <div class="col-md-4">
                       <div class="form-group">
 
-                        <label for="fecha_prestamo">fecha_prestamo</label>
+                        <label for="fecha_prestamo">Fecha prestamo</label>
                         {{-- <select name="" id="">
                           
                           <option value="">area</option>
                         </select> --}}
-                        <input type="date" id="fecha_prestamo" name="fecha_prestamo" value="{{ old('fecha_prestamo') }}"> 
+                        <input type="date" id="fecha_prestamo" name="fecha_prestamo" value="{{ old('fecha_prestamo') }}" class="form-control"> 
              
                       </div>
                     </div>
@@ -342,27 +524,32 @@
                     <div class="col-md-4">
                       <div class="form-group">
     
-                        <label for="id_devolucion">Fecha de devolucion</label>
+                        <label for="devolucion">Fecha de devolucion</label>
                         {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
-                        <select name="id_cat_nombre" id="id_cat_nombre"> 
+                        {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
                           @foreach($equiposprestados as $equipoprestado)
                              <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
                              @endforeach 
-                    </select>        
+                    </select>         --}}
+                    <input type="date" id="devolucion" name="devolucion"  value="{{ old('devolucion')}}" class="form-control"></input>
+                
                       </div>
                     </div>
 
+    
+
+
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label for="cat_nombres">Responsable</label>
+                        <label for="id_cat_nombre">Responsable</label>
                   {{-- <input name="id_cat_nombres" id="id_cat_nombres" type="text" placeholder="Escribe el responsable" value="{{ old('id_cat_nombres')}}"> --}}
-                {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
-                       @foreach($equiposprestados as $equipoprestado)
-                          <option value="{{ $equipoprestado->id_cat_nombre }}">{{ $equipoprestado->catalogonombre->nombre ??''}}</option>
+            <select name="id_cat_nombre" id="id_cat_nombre" class="form-control"> 
+                       @foreach($catalogonombres as $catalogonombre)
+                          <option value="{{ $catalogonombre->id }}">{{ $catalogonombre->nombre ??''}}</option>
                           @endforeach  
-                        </select>     --}}
-                        <input type="text" id="cat_nombres" name="cat_nombres" placeholder="Equipo a prestar" value="{{ old('cat_nombres')}}"></input>
-                
+                        </select>     
+                        {{-- <input type="text" id="solicitante" name="solicitante" placeholder="Responsable del equipo" value="{{ old('solicitante')}}" class="form-control"></input>
+                 --}}
                       </div>
                     </div>
 
@@ -371,7 +558,15 @@
                       <div class="form-group">
                         <label for="status" >Status</label>
                         <br>
-                  <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}">
+                  {{-- <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}"> --}}
+               <select name="status" id="status" class="form-control">
+                    <option value="Devuelto">Devuelto</option>
+                    <option value="No devuelto">No devuelto</option>
+                    <option value="Pendiente">Pendiente</option>
+                </select>
+                    
+               
+
                       </div>
                     </div>
 
@@ -422,6 +617,7 @@
 <!-- ./wrapper -->
 
 
+<script src="https://cdn.tailwindcss.com"></script>
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->

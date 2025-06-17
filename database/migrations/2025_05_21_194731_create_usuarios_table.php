@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre')->nullable();           // name → nombre
             $table->string('apellido_paterno')->nullable(); // first_surname → apellido_paterno
             $table->string('apellido_materno')->nullable(); // second_surname → apellido_materno
-            $table->string('nombre_usuario')->nullable();
+            $table->string('nombre_usuario')->nullable()->unique();
             $table->string('password')->nullable(); 
             $table->integer('rol')->nullable(); 
             // $table->unsignedBigInteger('id_solicitante'); // id_department → departamento_id

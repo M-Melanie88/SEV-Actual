@@ -23,9 +23,9 @@ class valesconsumiblesFactory extends Factory
             'numero_oficio'=> $this ->faker->randomElement(['a','b','c','d','1','2','3','4']),
             'folio_dti'=> $this ->faker->randomElement(['a','b','c','d','1','2','3','4']),
             'id_tipo_consumible'=> $this ->faker->randomElement(['1','2']),
-
+            'id_cat_firmantes'=> $this ->faker->randomElement(['1','2']),
             'id_cat_nombre'=> $this ->faker->randomElement(['1','2']),
-            'id_solicitante'=> $this ->faker->randomElement(['1','2']),
+
         ];
     }
 }

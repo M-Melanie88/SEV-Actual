@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('solicitantes', function (Blueprint $table) {
+        Schema::create('catalogofirmantes', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->nullable(); // name → nombre
-            $table->string(column: 'departamento')->nullable(); // name → nombr
+            $table->string('apellido_paterno')->nullable(); // first_surname → apellido_paterno
+            $table->string('apellido_materno')->nullable(); // second_surname → apellido_materno
+
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('solicitantes');
+        Schema::dropIfExists('catalogofirmantes');
     }
 };

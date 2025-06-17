@@ -12,9 +12,10 @@ class equiposprestados extends Model
         'id', 
         'id_usuario', 
         'fecha_prestamo', 
-        'id_cat_nombre',
         'status', 
         'fecha_prorroga',
+        'id_cat_nombre',
+        'id_cat_firmantes',
         'id_tipo_equipo',
         'id_devolucion'
     ];
@@ -38,9 +39,9 @@ class equiposprestados extends Model
     {
         return $this->belongsTo(devoluciones::class, 'id_devolucion');
     }
+    public function catalogofirmante()
+    {
+        return $this->belongsTo(catalogofirmantes::class, 'id_cat_firmantes');
+    }
 
-    // public function return()
-    // {
-    //     return $this->hasOne(Returns::class, 'loan_id');
-    // }
 }

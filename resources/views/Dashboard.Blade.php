@@ -198,7 +198,7 @@
   
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="Dashboard" class="nav-link ">
+                <a href="CatalogoNombres" class="nav-link ">
                   {{-- <i class="far fa-circle nav-icon"></i> --}}
                   {{-- <i class="nav-icon fas fa-chart-pie"></i> --}}
                   <i class="far fa-circle nav-icon"></i>
@@ -206,9 +206,29 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="EquiposPrestados" class="nav-link">
+                <a href="Catalogologos" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Catálogo de logos</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="CatalogoEquipos" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Catálogo de equipos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="CatalogoFirmantes" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Catálogo de firmantes</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="CatalogoConsumibles" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Catálogo de consumibles</p>
                 </a>
               </li>
              

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\catalogonombres;
+use App\Models\devoluciones;
 use App\Models\equiposprestados;
+use App\Models\solicitantes;
 use App\Models\tiposequipos;
 use Illuminate\Http\Request;
 
@@ -12,12 +14,21 @@ class EquiposprestadosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $equiposprestados = equiposprestados::all();
         $tiposequipos = tiposequipos::all();
-        return view("EquiposPrestados", compact('equiposprestados','tiposequipos'));
+        $catalogonombres=catalogonombres::all();
+
+         $equiposprestados=equiposprestados::query();
+         if($request->has('id_cat_nombre')){ 
+            $equiposprestados->where('id_cat_nombre',$request->input('id_cat_nombre'));
+         }
+
+        $equiposPaginadas= $equiposprestados->paginate(4);
+        $ep['equiposprestados']=$equiposPaginadas;
+        return view("EquiposPrestados",  $ep ,compact('equiposprestados','tiposequipos', 'catalogonombres'),['equiposprestados'=>equiposprestados::latest()->get()]);
     }
 
     /**
@@ -38,39 +49,40 @@ class EquiposprestadosController extends Controller
             // 'id'=>['required'],
             'id_usuario',
             'fecha_prestamo'=>['required'],
-            'cat_nombres'=>['required', 'string'],
-            'status'=>['required'],
-            'fecha_prorroga',
-        'nombre_tipo_equipo' => ['required', 'string'], // ← El nombre que el usuario ingresa
-            'id_devolucion',
+            'id_cat_nombre' => ['required'],
+            'id_cat_firmantes' ,
+            'status' => ['required'],
+            'fecha_prorroga' ,
+            'id_tipo_equipo' => ['required'],
+            'devolucion',
         ];
         
         $mensaje =[
             'required'=>':attribute es requerido',
             'unique'=>':attribute ya existe',
         ];
-     $validate = $this->validate($request, $datos, $mensaje);
+
         // 1. Crear o buscar el tipo de equipo por su nombre
-    $tipo = tiposequipos::firstOrCreate([
-        'nombre' => $request->nombre_tipo_equipo
-    ]);
-    $nom = catalogonombres::firstOrCreate([
-        'nombre' => $request->cat_nombres
-    ]);
+    // $tipo = tiposequipos::firstOrCreate([
+    //     'nombre' => $request->nombre_tipo_equipo
+    // ]);
+    // $nom = solicitantes::firstOrCreate([
+    //     'nombre' => $request->solicitante
+    // ]);
+   // Guardar o buscar la devolución
+   $devolucion = devoluciones::firstOrCreate([
+    'fecha_devolucion' => $request->devolucion
+]);
 
-    
+// Validar campos
+$validate = $this->validate($request, $datos, $mensaje);
 
-    // 2. Registrar el equipo prestado
-    equiposprestados::create([
-        'id_usuario' => $request->id_usuario,
-        'fecha_prestamo' => $request->fecha_prestamo,
-        'id_cat_nombre' => $nom->id,
-        'status' => $request->status,
-        'fecha_prorroga' => $request->fecha_prorroga,
-        'id_tipo_equipo' => $tipo->id, // ← aquí usamos el id del tipo
-        'id_devolucion' => $request->id_devolucion,
-        
-    ]);
+// Agregar manualmente el ID de devolución
+$validate['id_devolucion'] = $devolucion->id;
+
+
+    equiposprestados::create($validate);
+
 
    
         // equiposprestados::create($validate);
@@ -97,16 +109,57 @@ class EquiposprestadosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, equiposprestados $equiposprestados)
+    public function update(Request $request,  $id)
     {
         //
+
+          // Validación
+    $datos = [
+        'id_usuario',
+        'fecha_prestamo'=>['required'],
+        'id_cat_nombre' => ['required'],
+        'id_cat_firmantes' ,
+        'status' => ['required'],
+        'fecha_prorroga' ,
+        'id_tipo_equipo' => ['required'],
+        'devolucion',
+    ];
+
+    $mensaje = [
+        'required' => ':attribute es requerido',
+        'unique' => ':attribute ya existe',
+    ];
+
+    // Buscar o crear registros relacionados
+    // $tipo = tiposequipos::firstOrCreate([
+    //     'nombre' => $request->nombre_tipo_equipo
+    // ]);
+
+    $equipoprestado = equiposprestados::findOrFail($id);
+
+    // Buscar o crear la devolución con esa fecha
+    $devolucion = devoluciones::firstOrCreate([
+        'fecha_devolucion' => $request->devolucion
+    ]);
+
+    // Validar datos
+    $validate = $this->validate($request, $datos, $mensaje);
+
+    // Agregar manualmente el ID de la devolución
+    $validate['id_devolucion'] = $devolucion->id;
+
+    // Actualizar el registro
+    $equipoprestado->update($validate);
+        return redirect ('EquiposPrestados');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(equiposprestados $equiposprestados)
+    public function destroy( $id)
     {
         //
+        equiposprestados::destroy($id);
+        return redirect('EquiposPrestados');
     }
 }

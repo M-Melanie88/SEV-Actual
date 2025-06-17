@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\usuarios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuariosController extends Controller
 {
@@ -13,6 +14,8 @@ class UsuariosController extends Controller
     public function index()
     {
         //
+        $usuarios=usuarios::all();
+        return view('Usuarios', compact('usuarios'));
     }
 
     /**
@@ -29,6 +32,27 @@ class UsuariosController extends Controller
     public function store(Request $request)
     {
         //
+        $datos=[
+            'nombre' => ['required'],
+            'apellido_paterno' => ['required'],
+            'apellido_materno'=> ['required'],
+            'nombre_usuario'=> ['required'],
+            'password'=> ['required','min:8'],
+            'rol'=> ['required'],
+        ];
+        
+        $mensaje =[
+            'required'=>':attribute es requerido',
+            'unique'=>':attribute ya existe',
+        ];
+     $validate = $this->validate($request, $datos, $mensaje);
+     $validate['password']=Hash::make($validate['password']);
+     usuarios::create($validate);
+
+   
+        // equiposprestados::create($validate);
+
+        return redirect ('Usuarios');
     }
 
     /**
@@ -50,16 +74,39 @@ class UsuariosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, usuarios $usuarios)
+    public function update(Request $request, $id)
     {
         //
+        $datos=[
+            'nombre' => ['required'],
+            'apellido_paterno' => ['required'],
+            'apellido_materno'=> ['required'],
+            'nombre_usuario'=> ['required'],
+            'password'=> ['required','min:8'],
+            'rol'=> ['required'],
+        ];
+        
+        $mensaje =[
+            'required'=>':attribute es requerido',
+            'unique'=>':attribute ya existe',
+        ];
+     $validate = $this->validate($request, $datos, $mensaje);
+     $validate['password']=Hash::make($validate['password']);
+     usuarios::where('id','=',$id)->update($validate);
+     $usuarios=usuarios::findOrFail($id);
+   
+        // equiposprestados::create($validate);
+
+        return redirect ('Usuarios');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(usuarios $usuarios)
+    public function destroy( $id)
     {
         //
+        usuarios::destroy($id);
+        return redirect ('Usuarios');
     }
 }

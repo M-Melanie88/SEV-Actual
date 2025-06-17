@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\tiposequipos;
+use App\Models\catalogofirmantes;
 use Illuminate\Http\Request;
 
-class TiposequiposController extends Controller
+class CatalogofirmantesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,8 +13,8 @@ class TiposequiposController extends Controller
     public function index()
     {
         //
-        $catalogoequipos= tiposequipos::all();
-        return view('CatalogoEquipos' , compact('catalogoequipos'));
+        $catalogofirmantes =catalogofirmantes::all();        
+        return view('CatalogoFirmantes',compact('catalogofirmantes'));
     }
 
     /**
@@ -33,10 +33,9 @@ class TiposequiposController extends Controller
         //
         $datos=[
             'nombre' => ['required'],
-            'marca' => ['required'],
-            'serie'=> ['required'],
-            'inventario'=> ['required'],
-            'modelo'=> ['required'],
+            'apellido_paterno' => ['required'],
+            'apellido_materno'=> ['required'],
+    
         ];
         
         $mensaje =[
@@ -44,19 +43,18 @@ class TiposequiposController extends Controller
             'unique'=>':attribute ya existe',
         ];
      $validate = $this->validate($request, $datos, $mensaje);
-     tiposequipos::create($validate);
+     catalogofirmantes::create($validate);
 
    
         // equiposprestados::create($validate);
 
-        return redirect ('CatalogoEquipos');
-
+        return redirect ('CatalogoFirmantes');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(tiposequipos $tiposequipos)
+    public function show(catalogofirmantes $catalogofirmantes)
     {
         //
     }
@@ -64,7 +62,7 @@ class TiposequiposController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(tiposequipos $tiposequipos)
+    public function edit(catalogofirmantes $catalogofirmantes)
     {
         //
     }
@@ -72,15 +70,14 @@ class TiposequiposController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,  $id)
     {
-        //´
+        //
         $datos = [
             'nombre' => ['required'],
-            'marca' => ['required'],
-            'serie'=> ['required'],
-            'inventario'=> ['required'],
-            'modelo'=> ['required'],
+            'apellido_paterno' => ['required'],
+            'apellido_materno'=> ['required'],
+       
         ];
     
         $mensaje = [
@@ -89,19 +86,20 @@ class TiposequiposController extends Controller
         ];
     
         $validate = $this->validate($request, $datos, $mensaje);
-        tiposequipos::where('id','=',$id)->update($validate);
-        $equipo = tiposequipos::findOrFail($id);
+        catalogofirmantes::where('id','=',$id)->update($validate);
+        $equipo = catalogofirmantes::findOrFail($id);
     
-            return redirect ('CatalogoEquipos');
+            return redirect ('CatalogoFirmantes');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy( $id)
     {
         //
-        tiposequipos::destroy($id);
-        return redirect('CatalogoEquipos');
+
+        catalogofirmantes::destroy($id);
+        return redirect('CatalogoFirmantes');
     }
 }

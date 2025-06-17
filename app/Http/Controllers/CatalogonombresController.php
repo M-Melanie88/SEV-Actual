@@ -35,6 +35,7 @@ class CatalogonombresController extends Controller
             'nombre' => ['required'],
             'apellido_paterno' => ['required'],
             'apellido_materno'=> ['required'],
+            'departamento'=> ['required'],
         ];
         
         $mensaje =[
@@ -78,6 +79,7 @@ class CatalogonombresController extends Controller
         'nombre' => ['required'],
         'apellido_paterno' => ['required'],
         'apellido_materno'=> ['required'],
+        'departamento'=> ['required'],
     ];
 
     $mensaje = [

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\solicitantes;
+use App\Models\detallesprestamos;
 use Illuminate\Http\Request;
 
-class SolicitantesController extends Controller
+class DetallesprestamosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class SolicitantesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(solicitantes $solicitantes)
+    public function show(detallesprestamos $detallesprestamos)
     {
         //
     }
@@ -42,7 +42,7 @@ class SolicitantesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(solicitantes $solicitantes)
+    public function edit(detallesprestamos $detallesprestamos)
     {
         //
     }
@@ -50,7 +50,7 @@ class SolicitantesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, solicitantes $solicitantes)
+    public function update(Request $request, detallesprestamos $detallesprestamos)
     {
         //
     }
@@ -58,7 +58,7 @@ class SolicitantesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(solicitantes $solicitantes)
+    public function destroy(detallesprestamos $detallesprestamos)
     {
         //
     }

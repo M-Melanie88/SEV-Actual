@@ -18,7 +18,11 @@ class tiposequiposFactory extends Factory
     {
         return [
             //
-            'nombre'=> $this ->faker->name(),
+            'nombre'=> $this ->faker->word(),
+            'marca'=> $this ->faker->word(),
+            'serie'=> $this ->faker->randomElement(['a','b','c','d','1','2','3','4']),
+            'inventario'=> $this ->faker->randomElement(['a','b','c','d','1','2','3','4']),
+            'modelo'=> $this ->faker->word(),
         ];
     }
 }

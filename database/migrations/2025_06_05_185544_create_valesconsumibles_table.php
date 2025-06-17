@@ -16,16 +16,17 @@ return new class extends Migration
             $table->timestamp('fecha_emision')->nullable(); // issue_date → fecha_emision
             $table->string('numero_oficio')->nullable();     // number_ofice (corregido a numero_oficio)
             $table->string('observaciones')->nullable();     // observations → observaciones
-         
+            $table->string('cantidad')->nullable();     // observations → observaciones
+   
             $table->string('folio_dti')->nullable();          // sheet_dti → hoja_dti
 
 
-            $table->unsignedBigInteger('id_solicitante')->nullable();
-            $table->foreign('id_solicitante')->references('id')->on('solicitantes')->nullable();
+            $table->unsignedBigInteger('id_cat_firmantes')->nullable();
+            $table->foreign('id_cat_firmantes')->references('id')->on('catalogofirmantes')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->unsignedBigInteger('id_cat_nombre')->nullable();
-            $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->nullable();
+            $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->unsignedBigInteger('id_tipo_consumible')->nullable();
-            $table->foreign('id_tipo_consumible')->references('id')->on('tiposconsumibles')->nullable();
+            $table->foreign('id_tipo_consumible')->references('id')->on('tiposconsumibles')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->timestamps();
         });
     }

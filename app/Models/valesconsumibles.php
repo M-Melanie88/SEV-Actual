@@ -12,25 +12,25 @@ class valesconsumibles extends Model
         'id', 
         'fecha_emision', 
         'numero_oficio', 
-        'id_usuario',
+        'cantidad',
         'observaciones', 
         'id_cat_nombre',
+        'id_cat_firmantes',
         'id_tipo_consumible',
-        'solio_dti',
+        'folio_dti',
     ];
 
-    public function usuario()
-    {
-        return $this->belongsTo(usuarios::class);
-    }
-
-    public function cat_nombre()
-    {
-        return $this->belongsTo(catalogonombres::class);
-    }
 
     public function tipoconsumible()
     {
         return $this->belongsTo(tiposconsumibles::class, 'id_tipo_consumible');
+    }
+    public function cat_nombre()
+    {
+        return $this->belongsTo(catalogonombres::class, 'id_cat_nombre');
+    }
+    public function cat_firmantes()
+    {
+        return $this->belongsTo(catalogofirmantes::class, 'id_cat_firmantes');
     }
 }

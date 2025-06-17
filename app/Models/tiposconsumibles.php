@@ -10,12 +10,12 @@ class tiposconsumibles extends Model
     use HasFactory;
     protected $fillable = [
         'id', 
-        'descripcion', 
-        'marca', 
-        'modelo',
-        'capacidad', 
-        'fecha_vencimiento',
-        'cantidad',
+        'tipo_consumible',
+            'descripcion',
+            'SO',
+            'RAM',
+            'aditamentos',
+            'fecha_vencimiento'
     ];
 
 }

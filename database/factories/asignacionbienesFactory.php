@@ -26,7 +26,9 @@ class asignacionbienesFactory extends Factory
             'codigo_inventario'=> $this ->faker->randomNumber(5),
             'observaciones'=> $this ->faker->sentence(50),
             'id_cat_nombre'=> $this ->faker->randomElement(['1','2']),
-            'id_solicitante'=> $this ->faker->randomElement(['1','2']),
+            'id_cat_firmantes'=> $this ->faker->randomElement(['1','2']),
+            'id_devolucion'=> $this ->faker->randomElement(['1','2']),
+            'id_tipo_equipo'=> $this ->faker->randomElement(['1','2']),
         ];
     }
 }

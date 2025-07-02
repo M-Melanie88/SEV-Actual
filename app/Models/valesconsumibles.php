@@ -18,6 +18,8 @@ class valesconsumibles extends Model
         'id_cat_firmantes',
         'id_tipo_consumible',
         'folio_dti',
+        'id_catalogo_logo'
+
     ];
 
 
@@ -32,5 +34,9 @@ class valesconsumibles extends Model
     public function cat_firmantes()
     {
         return $this->belongsTo(catalogofirmantes::class, 'id_cat_firmantes');
+    }
+    public function cat_logos()
+    {
+        return $this->belongsTo(catalogologos::class, 'id_catalogo_logo');
     }
 }

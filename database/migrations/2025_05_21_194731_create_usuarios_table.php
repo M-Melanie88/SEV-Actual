@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Schema;
+
 
 return new class extends Migration
 {
@@ -25,7 +27,18 @@ return new class extends Migration
             $table->timestamps();
 
         });
+
+          FacadesDB::table('usuarios')->insert([
+            'nombre'=>'Daniel',
+            'apellido_paterno'=>'Luna',
+            'apellido_materno'=>'Serna',
+            'nombre_usuario'=>'AdminSerna',
+            'password'=>bcrypt('Serna1234'),
+            'rol'=>1,
+          ]);
     }
+
+  
  /**
      * Reverse the migrations.
      */

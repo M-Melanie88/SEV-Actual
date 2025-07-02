@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id('id'); 
 
             $table->unsignedBigInteger('id_usuario')->nullable(); 
+                 $table->string(column: 'folio')->nullable(); 
             $table->date('fecha_prestamo')->nullable(); 
             $table->unsignedBigInteger('id_cat_nombre')->nullable(); 
             $table->unsignedBigInteger('id_tipo_equipo')->nullable(); 
             $table->unsignedBigInteger('id_cat_firmantes')->nullable(); 
             $table->unsignedBigInteger('id_devolucion')->nullable(); 
-            $table->string('status')->nullable(); 
+            // $table->string('status')->nullable(); 
             $table->date('fecha_prorroga')->nullable(); 
+                $table->enum('status', ['prestado', 'devuelto', 'vencido','prorroga'])->nullable();
             
             $table->timestamps();
             
@@ -31,6 +33,9 @@ return new class extends Migration
             $table->foreign('id_cat_firmantes')->references('id')->on('catalogofirmantes')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->foreign('id_tipo_equipo')->references('id')->on('tiposequipos')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->foreign('id_devolucion')->references('id')->on('devoluciones')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->unsignedBigInteger('id_catalogo_logo')->nullable();
+            $table->foreign('id_catalogo_logo')->references('id')->on('catalogologos')->onDelete("cascade")->onUpdate("cascade")->nullable();
+         
         });
     }
 

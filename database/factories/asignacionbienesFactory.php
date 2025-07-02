@@ -18,10 +18,13 @@ class asignacionbienesFactory extends Factory
     {
         return [
             //
+            'folio'=> $this ->faker->randomElement(['1','2','a','b','c','d','3','4']),
             'descripcion'=> $this ->faker->sentence(50),
             'marca'=> $this ->faker->word(),
             'modelo'=> $this ->faker->word(),
-            'cantidad'=> $this ->faker->randomNumber(5),
+            'asignacion'=> $this ->faker->word(),
+            // 'cantidad'=> $this ->faker->randomNumber(5),
+            'fecha_asignacion'=> $this ->faker->dateTimeThisMonth(),
             'numero_serie'=> $this ->faker->randomElement(['1','2','a','b','c','d','3','4']),
             'codigo_inventario'=> $this ->faker->randomNumber(5),
             'observaciones'=> $this ->faker->sentence(50),

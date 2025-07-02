@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+   <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
   <!-- summernote -->
   {{-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> --}}
 </head>
@@ -298,12 +300,19 @@
 
 
                       <td>
-                        <form action="{{ url('/CatalogoFirmantes/'.$catalogofirmante->id) }}" method="POST">
+                        {{-- <form action="{{ url('/CatalogoFirmantes/'.$catalogofirmante->id) }}" method="POST">
                           @csrf
                           {{ method_field('DELETE') }}
                           <button type="submit" class="btn btn-danger">Eliminar</button>
 
-                        </form>
+                        </form> --}}
+                             <form action="{{ url('/CatalogoFirmantes/'.$catalogofirmante->id) }}"
+      method="POST"
+      class="form-eliminar d-inline">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+</form>
               
                         <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $catalogofirmante->id }}">Editar</a>
 
@@ -548,5 +557,36 @@
  <script src="dist/js/demo.js"></script> 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard.js"></script>
+
+
+
+<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.form-eliminar');
+
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita que se envíe el formulario al instante
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡Esta acción eliminará el registro permanentemente!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Se envía el formulario solo si se confirma
+                    }
+                });
+            });
+        });
+    });
+</script>
 </body>
 </html>

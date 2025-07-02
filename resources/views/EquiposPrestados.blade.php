@@ -22,6 +22,9 @@
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
   <!-- summernote -->
   {{-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> --}}
 </head>
@@ -311,6 +314,7 @@
                       <th>Responsables</th>
                       <th>Equipo</th>
                       <th>Fecha de prestamo</th>
+                      <th>Fecha de prorroga</th>
                       <th>Fecha de devolución</th>
                       <th>Status</th>
                       <th>Acciones</th>
@@ -320,22 +324,25 @@
               <tbody>
                   <tr>
                       <td>{{$equipoprestado->id}}</td>
-                      <td>{{$equipoprestado->catalogonombre->nombre ?? ' '}}</td> 
+                      <td>{{$equipoprestado->catalogonombre->nombre ?? ''}}</td> 
                       <td>{{$equipoprestado->tipoequipo->nombre ?? ' '}}</td>
                       <td>{{$equipoprestado->fecha_prestamo ?? ' '}}</td>
+                      <td>{{$equipoprestado->fecha_prorroga ?? '----'}}</td>
                       <td>{{$equipoprestado->devolucion->fecha_devolucion ?? ' '}}</td>
                       <td>{{$equipoprestado->status ?? ' '}}</td>
                       <td>
                
                  
-                        <a href="{{ url('') }}"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
-
-                        <form action="{{ url('/EquiposPrestados/'.$equipoprestado->id) }}" method="POST">
-                          @csrf
-                          {{ method_field('DELETE') }}
-                          <button type="submit" class="btn btn-danger">Eliminar</button>
-
-                        </form>
+                    <a href="{{ url('/EquiposPrestados/mostrarPdf',['id'=>$equipoprestado->id]) }}" target="_blank"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
+<!-- Botón Eliminar con confirmación -->
+<form action="{{ url('/EquiposPrestados/'.$equipoprestado->id) }}"
+      method="POST"
+      class="form-eliminar d-inline">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+</form>
+                        
               
                         <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $equipoprestado->id }}">Editar</a>
 
@@ -363,6 +370,26 @@
                                       <select name="id_tipo_equipo" id="id_tipo_equipo" class="form-control"> 
                                         @foreach($tiposequipos as $tipoequipo)
                                             <option value="{{ $tipoequipo->id }}" >{{ $tipoequipo->nombre}}</option>
+                                            @endforeach 
+                                
+                                          </select> 
+                                {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
+                                        {{-- @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
+                                        @endforeach --}}
+                                        {{-- <option value="">Computadora HP</option>
+                                        <option value="">Computadora HP</option>
+                                      </select> --}}
+                                
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                         
+                                      <label for="id_cat_firmantes">Firmante</label>
+                                      <select name="id_cat_firmantes" id="id_cat_firmantes" class="form-control"> 
+                                        @foreach($catalogofirmantes as $catalogofirmante)
+                                            <option value="{{ $catalogofirmante->id }}" >{{ $catalogofirmante->nombre}}</option>
                                             @endforeach 
                                 
                                           </select> 
@@ -430,18 +457,45 @@
                                       <br>
                                 {{-- <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}"> --}}
                              <select name="status" id="status" class="form-control">
-                                  <option value="Devuelto"{{ old('status',$equipoprestado->status=='Devuelto'?'selected':'') }}>Devuelto</option>
-                                  <option value="No devuelto"{{ old('status',$equipoprestado->status=='No devuelto'?'selected':'') }}>No devuelto</option>
-                                  <option value="Pendiente" {{ old('status',$equipoprestado->status=='Pendiente'?'selected':'') }}>Pendiente</option>
+                                  <option value="devuelto"{{ old('status',$equipoprestado->status=='devuelto'?'selected':'') }}>Devuelto</option>
+                                  <option value="vencido"{{ old('status',$equipoprestado->status=='no devuelto'?'selected':'') }}>No devuelto o vencido</option>
+                                  <option value="prorroga" {{ old('status',$equipoprestado->status=='prorroga'?'selected':'') }}>Pendiente o prórroga</option>
+                                  <option value="prestado" {{ old('status',$equipoprestado->status=='prestado'?'selected':'') }}>Prestado</option>
                               </select>
                                   
-                             
+             
               
                                     </div>
                                   </div>
               
+                     <div class="col-md-4">
+                                    <div class="form-group">
               
+                                      <label for="folio">Folio</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="text" id="folio" name="folio" value="{{ old('folio', $equipoprestado->folio) }}" class="form-control"> 
+                           
+                                    </div>
+                                  </div>
                             
+
+                                                      <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="fecha_prorroga">Fecha de prórroga</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="date" id="fecha_prorroga" name="fecha_prorroga"  value="{{ old('fecha_prorroga', $equipoprestado->fecha_prorroga ??' ')}}" class="form-control"></input>
+                              
+                                    </div>
+                                  </div>
                                            
                                 </div>
                               </div>
@@ -470,6 +524,9 @@
               </tbody>
 
           </table>
+                  
+{{-- No mover esta linea de codigo o afectara el filtrado de datos  --}}
+
           {{ $equiposprestados->links() }}
       </div>
   </div>
@@ -521,6 +578,29 @@
                     </div>
 
 
+
+                     <div class="col-md-4">
+                                    <div class="form-group">
+                         
+                                      <label for="id_cat_firmantes">Firmante</label>
+                                      <select name="id_cat_firmantes" id="id_cat_firmantes" class="form-control"> 
+                                        @foreach($catalogofirmantes as $catalogofirmante)
+                                            <option value="{{ $catalogofirmante->id }}" >{{ $catalogofirmante->nombre}}</option>
+                                            @endforeach 
+                                
+                                          </select> 
+                                {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
+                                        {{-- @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
+                                        @endforeach --}}
+                                        {{-- <option value="">Computadora HP</option>
+                                        <option value="">Computadora HP</option>
+                                      </select> --}}
+                                
+                                    </div>
+                                  </div>
+              
+
                     <div class="col-md-4">
                       <div class="form-group">
     
@@ -560,9 +640,11 @@
                         <br>
                   {{-- <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}"> --}}
                <select name="status" id="status" class="form-control">
-                    <option value="Devuelto">Devuelto</option>
-                    <option value="No devuelto">No devuelto</option>
-                    <option value="Pendiente">Pendiente</option>
+                 <option value="devuelto">Devuelto</option>
+                 <option value="vencido">No devuelto o vencido</option>
+                 <option value="prorroga" >Pendiente o prórroga</option>
+                 <option value="prestado">Prestado</option>
+                           
                 </select>
                     
                
@@ -571,6 +653,18 @@
                     </div>
 
 
+                     <div class="col-md-4">
+                                    <div class="form-group">
+              
+                                      <label for="folio">Folio</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="text" id="folio" name="folio" value="{{ old('folio') }}" class="form-control" placeholder="Escribe un folio"> 
+                           
+                                    </div>
+                                  </div>
               
                              
                   </div>
@@ -615,7 +709,11 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
+<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
+
+             
+{{-- No mover esta linea de codigo o afectara como se muestran los datos y su filtrado   --}}
 
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- jQuery -->
@@ -651,6 +749,34 @@
 <!-- AdminLTE for demo purposes -->
  <script src="dist/js/demo.js"></script> 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
+<script src="dist/js/pages/dashboard.js"></script>´
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.form-eliminar');
+
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita que se envíe el formulario al instante
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡Esta acción eliminará el registro permanentemente!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Se envía el formulario solo si se confirma
+                    }
+                });
+            });
+        });
+    });
+</script>
 </body>
 </html>

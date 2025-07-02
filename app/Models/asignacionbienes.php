@@ -17,10 +17,15 @@ class asignacionbienes extends Model
         'descripcion', 
         'marca',
         'modelo', 
-        'cantidad',
-        'serie',
-        'inventario',
-        'observaciones',
+        // 'cantidad',
+        'numero_serie',
+        'codigo_inventario',
+         'observaciones',
+        'id_catalogo_logo',
+        'fecha_asignacion',
+        'asignacion',
+        'folio',
+        
 
     ];
 

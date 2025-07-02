@@ -17,7 +17,9 @@ class equiposprestados extends Model
         'id_cat_nombre',
         'id_cat_firmantes',
         'id_tipo_equipo',
-        'id_devolucion'
+        'id_devolucion',
+        'id_catalogo_logo',
+        'folio'
     ];
 
  

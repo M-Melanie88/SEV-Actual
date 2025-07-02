@@ -21,6 +21,7 @@ class valesconsumiblesFactory extends Factory
             'fecha_emision'=> $this ->faker->dateTimeThisMonth(),
             'observaciones'=> $this ->faker->sentence(25),
             'numero_oficio'=> $this ->faker->randomElement(['a','b','c','d','1','2','3','4']),
+            'cantidad'=> $this ->faker->randomElement(['1','2','3','4','5','6','7','8']),
             'folio_dti'=> $this ->faker->randomElement(['a','b','c','d','1','2','3','4']),
             'id_tipo_consumible'=> $this ->faker->randomElement(['1','2']),
             'id_cat_firmantes'=> $this ->faker->randomElement(['1','2']),

@@ -15,13 +15,17 @@ return new class extends Migration
             $table->id('id'); 
 
        
+            $table->text('folio')->nullable(); 
             $table->text('descripcion')->nullable(); 
             $table->text('marca')->nullable(); 
             $table->text('modelo')->nullable(); 
-            $table->integer('cantidad')->nullable(); 
+            $table->date('fecha_asignacion')->nullable(); 
+            // $table->integer('cantidad')->nullable(); 
             $table->string('numero_serie')->nullable(); 
             $table->string('codigo_inventario')->nullable(); 
+            $table->string('asignacion')->nullable(); 
             $table->text('observaciones')->nullable(); 
+
             
             $table->timestamps();
             $table->unsignedBigInteger('id_cat_nombre')->nullable(); 
@@ -32,6 +36,9 @@ return new class extends Migration
             $table->foreign('id_devolucion')->references('id')->on('devoluciones')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->unsignedBigInteger('id_tipo_equipo')->nullable(); 
             $table->foreign('id_tipo_equipo')->references('id')->on('tiposequipos')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->unsignedBigInteger('id_catalogo_logo')->nullable();
+            $table->foreign('id_catalogo_logo')->references('id')->on('catalogologos')->onDelete("cascade")->onUpdate("cascade")->nullable();
+         
 
         });
     }

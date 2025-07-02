@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Equipos prestados</title>
+  <title>Asignación de bienes</title>
  <!-- Google Font: Source Sans Pro -->
   {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> --}}
   <!-- Font Awesome -->
@@ -22,6 +22,9 @@
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+
+      <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
   <!-- summernote -->
   {{-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> --}}
 </head>
@@ -252,7 +255,7 @@
     <div class="card card-primary card-outline">
       <div class="card-body">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-create">
-          Registrar equipo prestado
+          Registrar asignación de bienes 
         </button>
       </div>
     </div>
@@ -284,7 +287,7 @@
 
 @endphp
 
-<form action="{{ url('/EquiposPrestados') }}" method="get">
+{{-- <form action="{{ url('/EquiposPrestados') }}" method="get">
 
   <select name="id_cat_nombre" id="id_cat_nombre" class='form-control'>
   @foreach($catalogonombres as $catalogonombre)
@@ -303,54 +306,62 @@
               <input type="submit" value="Buscar" class="btn btn-primary" > 
 
 
-</form>
+</form> --}}
 
 
               <thead>
                   <tr>
-                      <th>Id prestamo</th>
-                      <th>Responsables</th>
-                      <th>Equipo</th>
-                      <th>Fecha de prestamo</th>
-                      <th>Fecha de devolución</th>
-                      <th>Status</th>
+                      <th>Id asignación de bienes</th>
+                      <th>Descripción</th>
+                      <th>Responsable</th>
+                      <th>Fecha de asignación</th>
+                      <th>Asignación</th>
                       <th>Acciones</th>
                   </tr>
               </thead>
-              @foreach($equiposprestados as $equipoprestado)
+              @foreach($asignacionbienes as $asignacionbien)
               <tbody>
                   <tr>
-                      <td>{{$equipoprestado->id}}</td>
-                      <td>{{$equipoprestado->catalogonombre->nombre ?? ' '}}</td> 
-                      <td>{{$equipoprestado->tipoequipo->nombre ?? ' '}}</td>
-                      <td>{{$equipoprestado->fecha_prestamo ?? ' '}}</td>
-                      <td>{{$equipoprestado->devolucion->fecha_devolucion ?? ' '}}</td>
-                      <td>{{$equipoprestado->status ?? ' '}}</td>
+                      <td>{{$asignacionbien->id}}</td>
+                      <td>{{$asignacionbien->descripcion ?? ' '}}</td> 
+                      <td>{{$asignacionbien->catalogonombre->nombre ?? ' '}}</td>
+                      <td>{{$asignacionbien->fecha_asignacion ?? ' '}}</td>
+                      <td>{{$asignacionbien->asignacion ?? ' '}}</td>
+                    
                       <td>
                
                  
-                        <a href="{{ url('') }}"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
+                      <a href="{{ url('/AsignacionBienes/mostrarPdf',['id'=>$asignacionbien->id]) }}" target="_blank"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
 
-                        <form action="{{ url('/EquiposPrestados/'.$equipoprestado->id) }}" method="POST">
+                        {{-- <form action="{{ url('/AsignacionBienes/'.$asignacionbien->id) }}" method="POST">
                           @csrf
                           {{ method_field('DELETE') }}
                           <button type="submit" class="btn btn-danger">Eliminar</button>
 
-                        </form>
+                        </form> --}}
+
+                        <!-- Botón Eliminar con confirmación -->
+<form action="{{ url('/AsignacionBienes/'.$asignacionbien->id) }}"
+      method="POST"
+      class="form-eliminar d-inline">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+</form>
               
-                        <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $equipoprestado->id }}">Editar</a>
+                        <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $asignacionbien->id }}">Editar</a>
 
 
-                        <form action="{{ url('/EquiposPrestados/'.$equipoprestado->id) }}" method="POST">
+                        <form action="{{ url('/AsignacionBienes/'.$asignacionbien->id) }}" method="POST">
 
                           @csrf
 
                           {{ method_field('PATCH') }}
-                          <div class="modal fade" id="modal-edit{{ $equipoprestado->id }}"> 
+                          <div class="modal fade" id="modal-edit{{ $asignacionbien->id }}"> 
                             <div class="modal-dialog modal-lg"> 
                             <div class="modal-content bg-light">
                               <div class="modal-header">
-                                <h4 class="modal-title ml-auto">Registro de prestamos de equipo</h4>
+                                <h4 class="modal-title ml-auto">Registro de bienes</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                                 </button>
@@ -360,10 +371,31 @@
                                   <div class="col-md-4">
                                     <div class="form-group">
                          
-                                      <label for="id_tipo_equipo">Equipo</label>
-                                      <select name="id_tipo_equipo" id="id_tipo_equipo" class="form-control"> 
-                                        @foreach($tiposequipos as $tipoequipo)
-                                            <option value="{{ $tipoequipo->id }}" >{{ $tipoequipo->nombre}}</option>
+                                      <label for="id_cat_nombre">Solicitante</label>
+                                      <select name="id_cat_nombre" id="id_cat_nombre" class="form-control"> 
+                                        @foreach($catalogonombres as $catalogonombre)
+                                            <option value="{{ $catalogonombre->id }}" >{{ $catalogonombre->nombre}}</option>
+                                            @endforeach 
+                                
+                                          </select> 
+                                {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
+                                        {{-- @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
+                                        @endforeach --}}
+                                        {{-- <option value="">Computadora HP</option>
+                                        <option value="">Computadora HP</option>
+                                      </select> --}}
+                                
+                                    </div>
+                                  </div>
+
+                                      <div class="col-md-4">
+                                    <div class="form-group">
+                         
+                                      <label for="id_cat_firmantes">Firmante</label>
+                                      <select name="id_cat_firmantes" id="id_cat_firmantes" class="form-control"> 
+                                        @foreach($catalogofirmantes as $catalogofirmante)
+                                            <option value="{{ $catalogofirmante->id }}" >{{ $catalogofirmante->nombre}}</option>
                                             @endforeach 
                                 
                                           </select> 
@@ -381,12 +413,24 @@
                                   <div class="col-md-4">
                                     <div class="form-group">
               
-                                      <label for="fecha_prestamo">Fecha prestamo</label>
+                                      <label for="descripcion">Descripción</label>
                                       {{-- <select name="" id="">
                                         
                                         <option value="">area</option>
                                       </select> --}}
-                                      <input type="date" id="fecha_prestamo" name="fecha_prestamo" value="{{ old('fecha_prestamo', $equipoprestado->fecha_prestamo) }}" class="form-control"> 
+                                      <input type="text" id="descripcion" name="descripcion" value="{{ old('descripcion', $asignacionbien->descripcion) }}" class="form-control" placeholder="Escribe una descripcion"> 
+                           
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+              
+                                      <label for="fecha_asignacion">Fecha asignacion</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="date" id="fecha_asignacion" name="fecha_asignacion" value="{{ old('fecha_asignacion', $asignacionbien->fecha_asignacion) }}" class="form-control" placeholder="Escribe una fecha de asignación"> 
                            
                                     </div>
                                   </div>
@@ -395,53 +439,86 @@
                                   <div class="col-md-4">
                                     <div class="form-group">
                   
-                                      <label for="devolucion">Fecha de devolucion</label>
+                                      <label for="marca">Marca</label>
                                       {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
                                       {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
                                         @foreach($equiposprestados as $equipoprestado)
                                            <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
                                            @endforeach 
                                   </select>         --}}
-                                  <input type="date" id="devolucion" name="devolucion"  value="{{ old('devolucion', $equipoprestado->devolucion->fecha_devolucion ??' ')}}" class="form-control"></input>
+                                  <input type="text" id="marca" name="marca"  value="{{ old('marca', $asignacionbien->marca ??' ')}}" class="form-control" placeholder="Escribe una marca"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="modelo">Modelo</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="modelo" name="modelo"  value="{{ old('modelo', $asignacionbien->modelo ??' ')}}" class="form-control" placeholder="Escribe un modelo"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="numero_serie">Serie</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="numero_serie" name="numero_serie"  value="{{ old('numero_serie', $asignacionbien->numero_serie ??' ')}}" class="form-control" placeholder="Escribe un numero serie"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="codigo_inventario">Inventario</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="codigo_inventario" name="codigo_inventario"  value="{{ old('codigo_inventario', $asignacionbien->codigo_inventario ??' ')}}" class="form-control" placeholder="Escribe un codigo de inventario"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="asignacion">Asignacion</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="asignacion" name="asignacion"  value="{{ old('asignacion', $asignacionbien->asignacion ??' ')}}" class="form-control" placeholder="Escribe la asignacion"></input>
                               
                                     </div>
                                   </div>
               
-                                  <div class="col-md-4">
+                                     <div class="col-md-4">
                                     <div class="form-group">
-                                      <label for="id_cat_nombre">Responsable</label>
-                                {{-- <input name="id_cat_nombres" id="id_cat_nombres" type="text" placeholder="Escribe el responsable" value="{{ old('id_cat_nombres')}}"> --}}
-                              {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
-                                     @foreach($equiposprestados as $equipoprestado)
-                                        <option value="{{ $equipoprestado->id_cat_nombre }}">{{ $equipoprestado->catalogonombre->nombre ??''}}</option>
-                                        @endforeach  
-                                      </select>     --}}
-                                      <select name="id_cat_nombre" id="id_cat_nombre" class="form-control"> 
-                                        @foreach($catalogonombres as $catalogonombre)
-                                           <option value="{{ $catalogonombre->id }}">{{ $catalogonombre->nombre ??''}}</option>
-                                           @endforeach  
-                                         </select>    
+              
+                                      <label for="folio">Folio</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="text" id="folio" name="folio" value="{{ old('folio', $asignacionbien->folio) }}" class="form-control"> 
+                           
                                     </div>
                                   </div>
-              
-              
-                                  <div class="col-md-4">
-                                    <div class="form-group">
-                                      <label for="status" >Status</label>
-                                      <br>
-                                {{-- <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}"> --}}
-                             <select name="status" id="status" class="form-control">
-                                  <option value="Devuelto"{{ old('status',$equipoprestado->status=='Devuelto'?'selected':'') }}>Devuelto</option>
-                                  <option value="No devuelto"{{ old('status',$equipoprestado->status=='No devuelto'?'selected':'') }}>No devuelto</option>
-                                  <option value="Pendiente" {{ old('status',$equipoprestado->status=='Pendiente'?'selected':'') }}>Pendiente</option>
-                              </select>
-                                  
-                             
-              
-                                    </div>
-                                  </div>
-              
-              
                             
                                            
                                 </div>
@@ -471,13 +548,16 @@
               </tbody>
 
           </table>
-          {{ $equiposprestados->links() }}
+                     
+{{-- No mover esta linea de codigo o afectara el filtrado de datos  --}}
+
+ {{ $asignacionbienes->links() }}
       </div>
   </div>
 </div>
 
 
-          <form action="{{ url('/EquiposPrestados') }}" method="POST">
+          <form action="{{ url('/AsignacionBienes') }}" method="POST">
 
             @csrf
             <div class="modal fade" id="modal-create"> 
@@ -491,87 +571,155 @@
                 </div>
                 <div class="modal-body">
                   <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-           
-                        <label for="id_tipo_equipo">Equipo</label>
-                 
-                  {{-- <input type="text" id="nombre_tipo_equipo" name="nombre_tipo_equipo" placeholder="Equipo a prestar" value="{{ old('nombre_tipo_equipo')}}" class="form-control"></input> --}}
-                
-                 <select name="id_tipo_equipo" id="id_tipo_equipo" class="form-control"> 
-                      @foreach($tiposequipos as $tipoequipo)
-                          <option value="{{ $tipoequipo->id }}" >{{ $tipoequipo->nombre}}</option>
-                          @endforeach 
+                                     <div class="col-md-4">
+                                    <div class="form-group">
+                         
+                                      <label for="id_cat_nombre">Solicitante</label>
+                                      <select name="id_cat_nombre" id="id_cat_nombre" class="form-control"> 
+                                        @foreach($catalogonombres as $catalogonombre)
+                                            <option value="{{ $catalogonombre->id }}" >{{ $catalogonombre->nombre}}</option>
+                                            @endforeach 
+                                
+                                          </select> 
+                                {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
+                                        {{-- @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
+                                        @endforeach --}}
+                                        {{-- <option value="">Computadora HP</option>
+                                        <option value="">Computadora HP</option>
+                                      </select> --}}
+                                
+                                    </div>
+                                  </div>
               
-                        </select> 
+                                      <div class="col-md-4">
+                                    <div class="form-group">
+                         
+                                      <label for="id_cat_firmantes">Firmante</label>
+                                      <select name="id_cat_firmantes" id="id_cat_firmantes" class="form-control"> 
+                                        @foreach($catalogofirmantes as $catalogofirmante)
+                                            <option value="{{ $catalogofirmante->id }}" >{{ $catalogofirmante->nombre}}</option>
+                                            @endforeach 
+                                
+                                          </select> 
+                                {{-- <select name="id_equipo_prestado" id="id_equipo_prestado"> --}}
+                                        {{-- @foreach($equiposprestados as $equipoprestado)
+                                        <option value="{{ $equipoprestado->id_equipo_prestado }}">{{ $equipoprestado->tipoequipo->nombre}}</option>
+                                        @endforeach --}}
+                                        {{-- <option value="">Computadora HP</option>
+                                        <option value="">Computadora HP</option>
+                                      </select> --}}
+                                
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+              
+                                      <label for="descripcion">Descripción</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="text" id="descripcion" name="descripcion" value="{{ old('descripcion') }}" class="form-control" placeholder="Escribe una descripcion"> 
+                           
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+              
+                                      <label for="fecha_asignacion">Fecha asignacion</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="date" id="fecha_asignacion" name="fecha_asignacion" value="{{ old('fecha_asignacion') }}" class="form-control" placeholder="Escribe una fecha de asignación"> 
+                           
+                                    </div>
+                                  </div>
+              
+              
+                                  <div class="col-md-4">
+                                    <div class="form-group">
                   
-                      </div>
-                    </div>
-
-                    <div class="col-md-4">
-                      <div class="form-group">
-
-                        <label for="fecha_prestamo">Fecha prestamo</label>
-                        {{-- <select name="" id="">
-                          
-                          <option value="">area</option>
-                        </select> --}}
-                        <input type="date" id="fecha_prestamo" name="fecha_prestamo" value="{{ old('fecha_prestamo') }}" class="form-control"> 
-             
-                      </div>
-                    </div>
-
-
-                    <div class="col-md-4">
-                      <div class="form-group">
-    
-                        <label for="devolucion">Fecha de devolucion</label>
-                        {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
-                        {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
-                          @foreach($equiposprestados as $equipoprestado)
-                             <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
-                             @endforeach 
-                    </select>         --}}
-                    <input type="date" id="devolucion" name="devolucion"  value="{{ old('devolucion')}}" class="form-control"></input>
-                
-                      </div>
-                    </div>
-
-    
-
-
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label for="id_cat_nombre">Responsable</label>
-                  {{-- <input name="id_cat_nombres" id="id_cat_nombres" type="text" placeholder="Escribe el responsable" value="{{ old('id_cat_nombres')}}"> --}}
-            <select name="id_cat_nombre" id="id_cat_nombre" class="form-control"> 
-                       @foreach($catalogonombres as $catalogonombre)
-                          <option value="{{ $catalogonombre->id }}">{{ $catalogonombre->nombre ??''}}</option>
-                          @endforeach  
-                        </select>     
-                        {{-- <input type="text" id="solicitante" name="solicitante" placeholder="Responsable del equipo" value="{{ old('solicitante')}}" class="form-control"></input>
-                 --}}
-                      </div>
-                    </div>
-
-
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label for="status" >Status</label>
-                        <br>
-                  {{-- <input name="status" id="status" type="text" placeholder="Status" value="{{ old('status')}}"> --}}
-               <select name="status" id="status" class="form-control">
-                    <option value="Devuelto">Devuelto</option>
-                    <option value="No devuelto">No devuelto</option>
-                    <option value="Pendiente">Pendiente</option>
-                </select>
-                    
-               
-
-                      </div>
-                    </div>
-
-
+                                      <label for="marca">Marca</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="marca" name="marca"  value="{{ old('marca')}}" class="form-control" placeholder="Escribe una marca"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="modelo">Modelo</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="modelo" name="modelo"  value="{{ old('modelo')}}" class="form-control" placeholder="Escribe un modelo"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="numero_serie">Serie</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="numero_serie" name="numero_serie"  value="{{ old('numero_serie')}}" class="form-control" placeholder="Escribe un numero serie"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="codigo_inventario">Inventario</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="codigo_inventario" name="codigo_inventario"  value="{{ old('codigo_inventario')}}" class="form-control" placeholder="Escribe un codigo de inventario"></input>
+                              
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="asignacion">Asignacion</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="asignacion" name="asignacion"  value="{{ old('asignacion')}}" class="form-control" placeholder="Escribe la asignación"></input>
+                              
+                                    </div>
+                                  </div>
+                               <div class="col-md-4">
+                                    <div class="form-group">
+              
+                                      <label for="folio">Folio</label>
+                                      {{-- <select name="" id="">
+                                        
+                                        <option value="">area</option>
+                                      </select> --}}
+                                      <input type="text" id="folio" name="folio" value="{{ old('folio') }}" class="form-control" placeholder="Escribe un folio"> 
+                           
+                                    </div>
+                                  </div>
               
                              
                   </div>
@@ -618,7 +766,11 @@
 <!-- ./wrapper -->
 
 
-<script src="https://cdn.tailwindcss.com"></script>
+   
+{{-- No mover esta linea de codigo o afectara como se muestran los datos y su filtrado   --}}
+
+
+<script src="https://cdn.tailwindcss.com"></script> 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -653,5 +805,35 @@
  <script src="dist/js/demo.js"></script> 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard.js"></script>
+
+
+<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.form-eliminar');
+
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita que se envíe el formulario al instante
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡Esta acción eliminará el registro permanentemente!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Se envía el formulario solo si se confirma
+                    }
+                });
+            });
+        });
+    });
+</script>
 </body>
 </html>

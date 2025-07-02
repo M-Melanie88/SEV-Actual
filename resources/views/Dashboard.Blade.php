@@ -5,26 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> --}}
   <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> --}}
-  <!-- Tempusdominus Bootstrap 4 -->
-  {{-- <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"> --}}
-  <!-- iCheck -->
-  {{-- <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css"> --}}
-  <!-- JQVMap -->
-  {{-- <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css"> --}}
+
+
+<!-- FullCalendar -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<!-- AdminLTE -->
+<script src="{{ asset('dist/js/adminlte.js') }}"></script>
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
-  <!-- summernote -->
-  {{-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> --}}
+
+   <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+
+
+
+
+    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -328,82 +331,31 @@
               </div>
         
               <!-- /.card-body-->
-              <div class="card-footer bg-transparent">
-                <div class="row">
-                  <div class="col-4 text-center">
-                    <div id="sparkline-1"></div>
-           
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <div id="sparkline-2"></div>
-            
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <div id="sparkline-3"></div>
-                  
-                  <!-- ./col -->
-                </div>
-                <!-- /.row -->
+     
+ <!-- CALENDARIO -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header bg-success">
+                <h3 class="card-title text-white">Calendario de Devoluciones</h3>
+              </div>
+              <div class="card-body">
+                <div id="calendar" style="  max-width: 900px;
+    margin: 0 auto;
+    height: 600px;">
+    
+  </div>
               </div>
             </div>
-            <!-- /.card -->
+          </div>
+        </div>
 
-            <!-- Calendar -->
-            <div class="card bg-gradient-success">
-              <div class="card-header border-0">
+      </div>
+    </section>
+  </div>
 
-                <h3 class="card-title">
-                  <i class="far fa-calendar-alt"></i>
-                  Calendar
-                </h3>
-                <!-- tools card -->
-                <div class="card-tools">
-                  <!-- button with a dropdown -->
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                      <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="dropdown-menu" role="menu">
-                      <a href="#" class="dropdown-item">Add new event</a>
-                      <a href="#" class="dropdown-item">Clear events</a>
-                      <div class="dropdown-divider"></div>
-                      <a href="#" class="dropdown-item">View calendar</a>
-                    </div>
-                  </div>
 
     
-                    <button type="button" class="btn btn-success btn-sm daterange" title="Date range">
-                      <i class="far fa-calendar-alt"></i>
-                    </button>
-                  <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-                <!-- /. tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body pt-0">
-                <!--The calendar -->
-                <div id="calendar" style="width: 100%"></div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-
-          <!-- right col -->
-        </div>
-        <!-- /.row (main row) -->
-      </div><!-- /.container-fluid -->
-
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -411,6 +363,37 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
+
+  <!-- Modal para mostrar equipos por día -->
+<div class="modal fade" id="equiposModal" tabindex="-1" role="dialog" aria-labelledby="equiposModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h5 class="modal-title" id="equiposModalLabel">Equipos para el día <span id="fechaSeleccionada"></span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Tipo de equipo</th>
+              <th>Estado</th>
+              <th>Fecha prestamo</th>
+              <th>Fecha devolución</th>
+              <th>Fecha prórroga</th>
+       
+            </tr>
+          </thead>
+          <tbody id="equiposListado">
+            <tr><td colspan="4" class="text-center">Seleccione un día para ver equipos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -425,12 +408,8 @@
 <!-- ChartJS -->
 {{-- <script src="plugins/chart.js/Chart.min.js"></script> --}}
 <!-- Sparkline -->
-<script src="plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+{{-- <script src="plugins/sparklines/sparkline.js"></script> --}}
+
 <!-- daterangepicker -->
 <script src="plugins/moment/moment.min.js"></script>
 <script src="plugins/daterangepicker/daterangepicker.js"></script>
@@ -444,7 +423,81 @@
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script> 
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'es',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,listWeek'
+    },
+    events: '/eventos-prestamos',
+    dateClick: function(info) {
+      var fecha = info.dateStr;
+      $('#fechaSeleccionada').text(fecha);
+      var tbody = $('#equiposListado');
+      tbody.html('<tr><td colspan="4" class="text-center">Cargando...</td></tr>');
+
+      $.ajax({
+        url: '/equipos-por-dia',
+        data: { fecha: fecha },
+        success: function(data) {
+          if(data.error) {
+            tbody.html('<tr><td colspan="5" class="text-center text-danger">' + data.error + '</td></tr>');
+            return;
+          }
+          if(data.length === 0) {
+            tbody.html('<tr><td colspan="5" class="text-center">No hay equipos para este día.</td></tr>');
+            return;
+          }
+
+        var filas = '';
+data.forEach(function(equipo) {
+  let colorClass = 'badge-secondary '; // por defecto
+
+  switch (equipo.estado) {
+    case 'Devuelto':
+      colorClass = 'badge-success'; break;
+    case 'Prorroga':
+      colorClass = 'badge-warning'; break;
+    case 'Prestado':
+      colorClass = 'badge-primary'; break;
+    case 'Vencido':
+      colorClass = 'badge-danger'; break;
+  }
+
+ filas += '<tr>' +
+  '<td>' + equipo.tipoequipo + '</td>' +
+  '<td><span class="badge ' + colorClass + '">' + equipo.estado + '</span></td>' +
+  '<td>' + (equipo.fecha_prestamo ?? '-') + '</td>' +
+  '<td>' + (equipo.fecha_devolucion ?? '-') + '</td>' +
+  '<td>' + (equipo.fecha_prorroga ?? '-') + '</td>' +
+  '</tr>';
+
+});
+          tbody.html(filas);
+        },
+        error: function() {
+          tbody.html('<tr><td colspan="5" class="text-center text-danger">Error cargando datos.</td></tr>');
+        }
+      });
+
+      $('#equiposModal').modal('show');
+    }
+  });
+
+  calendar.render();
+});
+
+</script>
+
+
 </body>
 </html>

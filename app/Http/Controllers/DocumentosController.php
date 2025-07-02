@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\dashboard;
-use App\Models\equiposprestados;
+use App\Models\documentos;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class DocumentosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //´
-        $equiposprestados=equiposprestados::all();
-                return view('Dashboard', compact('equiposprestados'));
+        //
     }
 
     /**
@@ -37,7 +34,7 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(dashboard $dashboard)
+    public function show(documentos $documentos)
     {
         //
     }
@@ -45,7 +42,7 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(dashboard $dashboard)
+    public function edit(documentos $documentos)
     {
         //
     }
@@ -53,7 +50,7 @@ class DashboardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, dashboard $dashboard)
+    public function update(Request $request, documentos $documentos)
     {
         //
     }
@@ -61,9 +58,12 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(dashboard $dashboard)
+    public function destroy(documentos $documentos)
     {
         //
     }
+
+  
+
 
 }

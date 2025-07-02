@@ -17,8 +17,9 @@ class equiposprestadosFactory extends Factory
     public function definition(): array
     {
         return [
+            'folio'=> $this ->faker->randomElement(['1','2','a','b','c','d','3','4']),
             'fecha_prestamo'=> $this ->faker->dateTimeThisMonth(),
-            'status'=> $this ->faker->word(),
+            'status'=> $this ->faker->randomElement(['prestado','devuelto','prorroga','vencido']),
             'fecha_prorroga'=> $this ->faker->dateTimeThisMonth(),
             'id_usuario'=> $this ->faker->randomElement(['1','2']),
             'id_cat_nombre'=> $this ->faker->randomElement(['1','2']),

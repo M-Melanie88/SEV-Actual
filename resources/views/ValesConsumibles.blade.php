@@ -24,6 +24,9 @@
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   {{-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> --}}
+
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -327,15 +330,23 @@
                       <td>
                
                  
-                        <a href="{{ url('') }}"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
+                        <a href="{{ url('/ValesConsumibles/mostrarPdf',['id'=>$valeconsumible->id]) }}" target="_blank"  title="impresora iconos" class="btn btn-light" style="color:red;" target="_blank">PDF <img height="40px" width="40px" src="imagenes/impresorak.png" alt="No se encuetra la IMG"></a>
 
-                        <form action="{{ url('/ValesConsumibles/'.$valeconsumible->id) }}" method="POST">
+                        {{-- <form action="{{ url('/ValesConsumibles/'.$valeconsumible->id) }}" method="POST">
                           @csrf
                           {{ method_field('DELETE') }}
                           <button type="submit" class="btn btn-danger">Eliminar</button>
 
                         </form>
-              
+               --}}
+               <!-- Botón Eliminar con confirmación -->
+<form action="{{ url('/ValesConsumibles/'.$valeconsumible->id) }}"
+      method="POST"
+      class="form-eliminar d-inline">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+</form>
                         <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $valeconsumible->id }}">Editar</a>
 
 
@@ -451,6 +462,20 @@
                               
                                     </div>
                                   </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="numero_oficio">Oficio</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="numero_oficio" name="numero_oficio" placeholder="Escribe el oficio" value="{{ old('numero_oficio', $valeconsumible->numero_oficio ??' ')}}" class="form-control"></input>
+                              
+                                    </div>
+                                  </div>
               
                    
                                     
@@ -481,7 +506,10 @@
               </tbody>
 
           </table>
-          {{-- {{ $equiposprestados->links() }} --}}
+
+{{-- No mover esta linea de codigo o afectara el filtrado de datos  --}}
+
+          {{ $valesconsumibles->links() }} 
       </div>
   </div>
 </div>
@@ -598,9 +626,24 @@
                       </div>
                     </div>
               
-                             
+                                   <div class="col-md-4">
+                                    <div class="form-group">
+                  
+                                      <label for="numero_oficio">Oficio</label>
+                                      {{-- <input type="date" id="id_devolucion" name="id_devolucion" value="{{ old('id_devolucion') }}">  --}}
+                                      {{-- <select name="id_cat_nombre" id="id_cat_nombre"> 
+                                        @foreach($equiposprestados as $equipoprestado)
+                                           <option value="{{ $equipoprestado->id_devolucion }}">{{ $equipoprestado->devolucion->fecha_devolucion ??' '}}</option>
+                                           @endforeach 
+                                  </select>         --}}
+                                  <input type="text" id="numero_oficio" placeholder="Escribe el oficio" name="numero_oficio"  value="{{ old('numero_oficio')}}" class="form-control"></input>
+                              
+                                    </div>
+                                  </div>        
                   </div>
                 </div>
+
+                
                         <div class="modal-footer ">
                       
                           <button  type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
@@ -642,8 +685,10 @@
 </div>
 <!-- ./wrapper -->
 
+      
+{{-- No mover esta linea de codigo o afectara como se muestran los datos y su filtrado   --}}
 
-<script src="https://cdn.tailwindcss.com"></script>
+ <script src="https://cdn.tailwindcss.com"></script> 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -678,5 +723,34 @@
  <script src="dist/js/demo.js"></script> 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard.js"></script>
+
+<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.form-eliminar');
+
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita que se envíe el formulario al instante
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡Esta acción eliminará el registro permanentemente!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Se envía el formulario solo si se confirma
+                    }
+                });
+            });
+        });
+    });
+</script>
 </body>
 </html>

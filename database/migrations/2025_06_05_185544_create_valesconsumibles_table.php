@@ -27,6 +27,8 @@ return new class extends Migration
             $table->foreign('id_cat_nombre')->references('id')->on('catalogonombres')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->unsignedBigInteger('id_tipo_consumible')->nullable();
             $table->foreign('id_tipo_consumible')->references('id')->on('tiposconsumibles')->onDelete("cascade")->onUpdate("cascade")->nullable();
+            $table->unsignedBigInteger('id_catalogo_logo')->nullable();
+            $table->foreign('id_catalogo_logo')->references('id')->on('catalogologos')->onDelete("cascade")->onUpdate("cascade")->nullable();
             $table->timestamps();
         });
     }

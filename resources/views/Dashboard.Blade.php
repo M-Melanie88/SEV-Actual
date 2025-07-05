@@ -68,6 +68,15 @@
         </div>
       </li>
 
+               <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();" class="btn btn-light">
+                       Cerrar sesión
+                    </x-responsive-nav-link>
+                </form> 
      
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
